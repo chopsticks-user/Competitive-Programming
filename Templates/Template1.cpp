@@ -97,36 +97,6 @@ void solve(int nTests = util::scan<int>()) {
   using namespace util;
 
   while (nTests--) {
-    auto [n, m, l] = scan<int, 3>();
-
-    vector<int> a(n);
-    scan(a);
-
-    multimap<int, int, greater<int>> b;
-    repf(i, 0, m) {
-      int p;
-      scan(p);
-      b.insert({p, i});
-    }
-
-    map<int, set<int>> cd;
-    while (l--) {
-      auto [c, d] = scan<int, 2>();
-      cd[c - 1].insert(d - 1);
-    }
-
-    int max = 0;
-    repf(i, 0, n) {
-      auto ci = cd[i];
-      for (auto &bIt : b) {
-        if (ci.find(bIt.second) == ci.end()) {
-          max = std::max(max, a[i] + bIt.first);
-          break;
-        }
-      }
-    }
-
-    println(max);
   }
 }
 
