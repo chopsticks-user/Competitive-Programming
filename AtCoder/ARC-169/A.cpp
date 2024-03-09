@@ -92,11 +92,39 @@ void println(const Container<Type> &vec) {
 
 } // namespace util
 
+struct rect {
+  int a, b, c, d;
+};
+
 void solve(int nTests = util::scan<int>()) {
   using namespace std;
   using namespace util;
 
   while (nTests--) {
+    int n = scan<int>();
+    vector<int> a(n), p(n - 1);
+    scan(a);
+    scan(p);
+    double sum = 0.0;
+    bool hasOne = false;
+    repf(i, 0, n - 1) {
+      if (p[i] == 1) {
+        hasOne = true;
+        sum += double(a[i + 1] + a[p[i] - 1]);
+      }
+    }
+
+    if (!hasOne) {
+      sum = a[0];
+    }
+
+    if (sum > 0) {
+      println('+');
+    } else if (sum == 0) {
+      println('0');
+    } else {
+      println('-');
+    }
   }
 }
 

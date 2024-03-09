@@ -1,11 +1,9 @@
 #include <algorithm>
 #include <array>
-#include <chrono>
 #include <cmath>
 #include <functional>
 #include <iostream>
 #include <limits>
-#include <list>
 #include <map>
 #include <numeric>
 #include <queue>
@@ -156,40 +154,15 @@ void shuffle(TContainer &c)
 
 } // namespace util
 
-using namespace std;
-using namespace util;
-
 void solve(int nTests = util::scan<int>()) {
+  using namespace std;
+  using namespace util;
+
   while (nTests--) {
-    auto n = scan<i32>();
-    list<i32> a(n);
-    for (auto &i : a) {
-      i = scan<i32>();
-    }
-
-    unordered_map<i32, list<i32>::iterator> posMap;
-    for (auto it = a.begin(); it != a.end(); ++it) {
-      posMap[*it] = it;
-    }
-
-    auto q = scan<i32>();
-    while (q--) {
-      auto action = scan<i32>();
-      if (action == 1) {
-        auto [p1, p2] = scan<i32, 2>();
-        auto itp1 = posMap[p1];
-        posMap[p2] = a.insert(++itp1, p2);
-        continue;
-      }
-      auto p1 = scan<i32>();
-      a.erase(posMap[p1]);
-      posMap.erase(p1);
-    }
-
-    for (auto &i : a) {
-      print(i, " ");
-    }
-    println();
+    string s = scan<string>();
+    s.erase(s.begin() + s.find_first_of('|'),
+            s.begin() + s.find_last_of('|') + 1);
+    println(s);
   }
 }
 

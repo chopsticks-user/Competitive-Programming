@@ -1,11 +1,9 @@
 #include <algorithm>
 #include <array>
-#include <chrono>
 #include <cmath>
 #include <functional>
 #include <iostream>
 #include <limits>
-#include <list>
 #include <map>
 #include <numeric>
 #include <queue>
@@ -156,40 +154,51 @@ void shuffle(TContainer &c)
 
 } // namespace util
 
-using namespace std;
-using namespace util;
-
 void solve(int nTests = util::scan<int>()) {
+  using namespace std;
+  using namespace util;
+
   while (nTests--) {
-    auto n = scan<i32>();
-    list<i32> a(n);
+    u64 n = scan<u64>();
+    vector<u64> a(n);
     for (auto &i : a) {
-      i = scan<i32>();
+      i = scan<u64>();
     }
 
-    unordered_map<i32, list<i32>::iterator> posMap;
-    for (auto it = a.begin(); it != a.end(); ++it) {
-      posMap[*it] = it;
+    u64 m = scan<u64>();
+    vector<u64> b(m);
+    for (auto &i : b) {
+      i = scan<u64>();
     }
 
-    auto q = scan<i32>();
-    while (q--) {
-      auto action = scan<i32>();
-      if (action == 1) {
-        auto [p1, p2] = scan<i32, 2>();
-        auto itp1 = posMap[p1];
-        posMap[p2] = a.insert(++itp1, p2);
+    u64 l = scan<u64>();
+    vector<u64> c(l);
+    for (auto &i : c) {
+      i = scan<u64>();
+    }
+
+    u64 q = scan<u64>();
+    vector<u64> x(q);
+    for (auto &i : x) {
+      i = scan<u64>();
+    }
+
+    set<u64> possibleSums{};
+    for (u64 i = 0; i < n; ++i) {
+      for (u64 j = 0; j < m; ++j) {
+        for (u64 k = 0; k < l; ++k) {
+          possibleSums.insert(a[i] + b[j] + c[k]);
+        }
+      }
+    }
+
+    for (auto &i : x) {
+      if (!possibleSums.contains(i)) {
+        println("No");
         continue;
       }
-      auto p1 = scan<i32>();
-      a.erase(posMap[p1]);
-      posMap.erase(p1);
+      println("Yes");
     }
-
-    for (auto &i : a) {
-      print(i, " ");
-    }
-    println();
   }
 }
 

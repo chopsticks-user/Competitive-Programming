@@ -159,6 +159,15 @@ void shuffle(TContainer &c)
 using namespace std;
 using namespace util;
 
+// class Action {
+// public:
+//   Action(u32 type, u32 param1, u32 param2)
+//       : action{type == 1 ? [](vector<u32> &a, u32 p1, u32 p2) {} } {}
+
+// private:
+//   std::function<void(vector<u32> &, u32, u32)> action;
+// };
+
 void solve(int nTests = util::scan<int>()) {
   while (nTests--) {
     auto n = scan<i32>();
