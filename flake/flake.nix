@@ -1,0 +1,84 @@
+{
+  description = ""; # edit
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; # edit as needed
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs =
+    {
+      nixpkgs,
+      flake-utils,
+      ...
+    }:
+    let
+      meta = {
+        name = "competitive-programming"; # edit
+        ide = {
+          name = "CLion"; # edit
+          exec = "clion"; # edit
+          icon = "clion"; # edit
+        };
+        flakeDir = "flake"; # edit as needed
+        desktopPath = "$HOME/.local/share/applications"; # edit as needed
+      };
+    in
+    flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+      in
+      {
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            cmake
+            ninja
+            just
+            gcc
+          ];
+
+          shellHook = "";
+        };
+        apps =
+          let
+            desktopEntry = "${meta.desktopPath}/${meta.ide.exec}-${meta.name}.desktop";
+          in
+          {
+            install =
+              let
+                developCmdArgumentPath =
+                  "path:$PROJECT_PATH" + nixpkgs.lib.optionalString (meta.flakeDir != "") "/${meta.flakeDir}";
+              in
+              {
+                type = "app";
+                program = toString (
+                  pkgs.writeShellScript "install" ''
+                    PROJECT_PATH="''${1:-$(git rev-parse --show-toplevel)}"
+                    mkdir -p ${meta.desktopPath}
+                    cat > ${desktopEntry} <<DESKTOP
+                    [Desktop Entry]
+                    Name=${meta.ide.name} (${meta.name})
+                    Exec=nix develop ${developCmdArgumentPath} -c ${meta.ide.exec} $PROJECT_PATH
+                    Icon=${meta.ide.icon}
+                    Type=Application
+                    Categories=Development;
+                    DESKTOP
+                  ''
+                );
+              };
+            uninstall = {
+              type = "app";
+              program = toString (
+                pkgs.writeShellScript "uninstall" ''
+                  rm -f ${desktopEntry}
+                ''
+              );
+            };
+          };
+      }
+    )
+    // {
+      # system-independent outputs
+    };
+}
